@@ -103,45 +103,6 @@ df = run_benchmark(families=['QAOA', 'QNN'], qubits=[6, 8, 10], seeds=[19, 23])
 print(summarise_benchmark(df))      # mean Q-Score, rank, runtime, win-count per method
 ```
 
-## Notebooks
-
-Under `notebooks/` (each ships executed at the laptop-friendly `SCALE='small'`; flip to `'full'` or set
-`RECOMPUTE=True` to regenerate). Heavy cells use a **cache-or-compute** pattern: they load a cached CSV/JSON
-if present, otherwise compute from scratch.
-
-1. **`01_qaoa_maxcut_optimizers.ipynb`** — partitioned QAOA/MaxCut across all eleven classical optimizers
-   *and* all eleven partition methods; recovered approximation ratio and cut-expectation error per method.
-2. **`02_qnn_classification.ipynb`** — trainable QNNs on **Iris** (4 features → 4 qubits, angle) and
-   **Digits** (all 64 pixels → 8 qubits, data re-uploading; plus a 6-qubit amplitude-encoded variant),
-   **no feature reduction**; partition reconstruction + prediction-preservation across all methods.
-3. **`03_prism_insights.ipynb`** — eight insight experiments: ablation ladder, light-cone value,
-   symmetry-reduced QPD overhead, scaling, the deception dial (when PRISM is necessary), restart robustness,
-   an honest count-blind limitation, and a "when does PRISM win?" feature model.
-4. **`04_prism_in_practice.ipynb`** — headline case study: split one circuit across two QPUs, with fragment
-   circuit diagrams, the interaction graph + cut, an ideal-vs-reconstructed distribution overlay, a
-   per-method scorecard, and a cross-seed robustness check.
-5. **`05_benchmark_scorecard.ipynb`** — the comprehensive results dashboard across all nine families:
-   Q-Score leaderboard, family-stratified bars, per-metric box-plots, rank CDF + win-rate, and a
-   family × method heatmap.
-6. **`06_distributed_execution_payoff.ipynb`** — the resource value proposition: ebits/cbits per cut,
-   QPD overhead γ and shot budget, maximum fragment width ("run a wide circuit on two small QPUs"), and
-   savings versus the naive cut.
-7. **`07_noise_resilience.ipynb`** — exact density-matrix noise sweep showing when partition+reconstruct
-   beats the monolithic circuit as gate noise rises, and where the reconstruction floor caps the gain.
-8. **`08_multi_qpu_kway.ipynb`** — multi-QPU (k-way) cutting: reconstruction quality, fragment width, and
-   cut-gate growth as a circuit is split across 2, 3, 4 … QPUs, per method.
-9. **`09_optimality_gap.ipynb`** — brute-force *every* balanced cut for small circuits, then measure each
-   method's optimality gap and its percentile in the full cut landscape.
-10. **`10_distributed_cnot_qaoa.ipynb`** — implement + verify the non-local CNOT (gate teleportation), build
-    an exact distributed QAOA, and compare the ebit/teleport paradigm against PRISM cutting across all
-    methods (ebits vs reconstruction-fidelity trade-off).
-11. **`11_distributed_qnn_deployment.ipynb`** — train QNN classifiers on several datasets and *deploy them
-    across QPUs*: reconstruction fidelity, prediction agreement, accuracy, and k-way splits — with the
-    instructive distribution-vs-decision caveat.
-12. **`12_qnn_ansatz_encoding_study.ipynb`** — which QNN designs are partition-friendly: entangler topology
-    (`ring`/`linear`/`blocks`/`full`) × encoding (`angle`/re-uploading/`amplitude`) vs partitionability,
-    entanglement, and the expressibility ↔ partitionability trade-off — concrete design guidance.
-
 ## Testing
 
 ```bash
