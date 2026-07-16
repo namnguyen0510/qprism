@@ -1,0 +1,2 @@
+[console_scripts]
+prism-benchmark = prism.cli:main
