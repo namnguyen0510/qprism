@@ -23,22 +23,17 @@ results, fails = prism.run_all_partition_methods(G, layout, 10, qc_full=qc)   # 
   (PRISM-KL → OE → MI → BF → **LCT**).
 - **Multi-objective, symmetry-aware cost** (paper eq. 5): entanglement entropy `S(A)`, classical mutual
   information `I(A:B)`, symmetry-reduced QPD overhead `log γ_sym`, weighted cut `W_cut`, and balance `Δ`.
-- **Exact reconstruction & scoring**: product reconstruction `p_A ⊗ p_B` vs the ideal statevector with six
-  metrics (TVD, fidelity, KL, Hellinger, JS, cross-entropy) and the unified **Q-Score**.
 - **Application layer** (`prism.qml`): QAOA-MaxCut with eleven classical optimizers, trainable QNNs
   (angle, data re-uploading, and amplitude encoding), and a bridge to partition **any Qiskit circuit**.
 - **Benchmark driver + CLI**: `prism-benchmark` runs all methods on all families × qubit counts × seeds.
 - **Noisy execution** (`prism.noise`): exact density-matrix simulation with a depolarizing + readout model,
   and noisy fragment reconstruction — to show when cutting beats running the monolith.
-- **Multi-QPU (k-way) cutting** (`prism.kway_partition`): recursive bisection to split a circuit across
-  3, 4, … smaller QPUs, with k-fold product reconstruction.
 - **Exact distributed execution** (`prism.distributed`): verified non-local CNOT by gate teleportation
   (1 ebit + 2 cbits), so a partition can be run *exactly* across QPUs — the entanglement-assisted foil to
   quasi-probability cutting.
 - **QNN application suite** (`prism.qml`): Iris/Wine/Breast-Cancer/Digits/synthetic loaders, four entangling
   topologies (`ring`/`linear`/`blocks`/`full`), and distributed-deployment helpers (cut a trained QNN across
   QPUs and measure preserved accuracy / prediction agreement).
-- **Twelve reproducible notebooks** and a **pytest** suite (41 tests).
 
 ## Installation
 
@@ -92,18 +87,6 @@ src/prism/
 | `PRISM-MI` | ladder | + entanglement-entropy & mutual-information cost (SV-aware SA) |
 | `PRISM-BF` | ladder | + boundary-focused move proposals |
 | `PRISM-LCT` | **main** | + light-cone graph + parallel tempering + tabu + consensus + polish |
-
-### Competitor audit — `qdislib`
-
-[qdislib](https://github.com/bsc-wdc/qdislib) (Barcelona Supercomputing Center, arXiv:2505.01184) represents
-a circuit as a **directed acyclic graph** — nodes are gates, edges encode execution order — and chooses cuts
-that minimise the number of cross-partition (gate-cut) operations. `prism.partition.baselines`:
-
-1. **uses the genuine package when installed** — `_use_real_qdislib` compiles the layout to a Qiskit circuit
-   and delegates to qdislib's DAG gate-cut entry points (`prism.has_real_qdislib()` reports availability);
-2. otherwise applies a **faithful self-contained implementation** — explicit gate-DAG construction
-   (`_build_gate_dag`), projection to a depth-span-weighted qubit graph, and a centrality-seeded balanced
-   growth that minimises straddling gates — so the benchmark always exercises the DAG gate-cut contract.
 
 ## Benchmark
 
